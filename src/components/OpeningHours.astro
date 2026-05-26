@@ -1,0 +1,124 @@
+---
+import { openingHours } from '../data/hours';
+
+const days = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+const todayLabel = days[new Date().getDay()];
+---
+
+<div class="hours">
+  <div class="hours__header">
+    <h2 class="hours__title">Giờ mở cửa</h2>
+    <span class="hours__status" id="hours-status"></span>
+  </div>
+
+  <ul class="hours__list">
+    {openingHours.map(row => (
+      <li class="hours__row">
+        <span class="hours__day">{row.label}</span>
+        {row.closed
+          ? <span class="hours__time hours__time--closed">Nghỉ</span>
+          : <span class="hours__time">{row.open} – {row.close}</span>
+        }
+      </li>
+    ))}
+  </ul>
+
+  <p class="hours__note">
+    Hôm nay: <strong>{todayLabel}</strong>
+  </p>
+</div>
+
+<script>
+  function checkOpen(): boolean {
+    const day = new Date().getDay();
+    const hour = new Date().getHours();
+    const minute = new Date().getMinutes();
+    const now = hour * 60 + minute;
+    if (day === 0) return now >= 8 * 60 && now < 21 * 60;
+    return now >= 7 * 60 && now < 21 * 60;
+  }
+
+  const el = document.getElementById('hours-status');
+  if (el) {
+    const open = checkOpen();
+    el.textContent = open ? '● Đang mở cửa' : '● Đã đóng cửa';
+    el.className = 'hours__status ' + (open ? 'hours__status--open' : 'hours__status--closed');
+  }
+</script>
+
+<style>
+  .hours {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.07);
+  }
+
+  .hours__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #ea580c;
+    margin-bottom: 14px;
+  }
+
+  .hours__title {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #ea580c;
+  }
+
+  .hours__status {
+    font-size: .8rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+
+  .hours__status--open {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .hours__status--closed {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .hours__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .hours__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: .88rem;
+  }
+
+  .hours__day { color: #555; }
+
+  .hours__time {
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  .hours__time--closed {
+    color: #ef4444;
+  }
+
+  .hours__note {
+    margin: 14px 0 0;
+    font-size: .8rem;
+    color: #aaa;
+    text-align: right;
+  }
+</style>

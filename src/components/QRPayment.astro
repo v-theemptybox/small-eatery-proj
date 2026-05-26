@@ -1,0 +1,61 @@
+---
+interface Props {
+  qrSrc?: string;
+  bankName?: string;
+  accountNumber?: string;
+  accountName?: string;
+}
+
+const {
+  qrSrc = '/assets/qr-placeholder.png',
+  bankName = 'Vietcombank',
+  accountNumber = '1234567890',
+  accountName = 'NGUYEN VAN A',
+} = Astro.props;
+---
+
+<div class="qr-payment">
+  <h3 class="qr-payment__title">Thanh toán chuyển khoản</h3>
+  <img class="qr-payment__img" src={qrSrc} alt="QR thanh toán" />
+  <div class="qr-payment__info">
+    <p><strong>Ngân hàng:</strong> {bankName}</p>
+    <p><strong>Số TK:</strong> {accountNumber}</p>
+    <p><strong>Tên TK:</strong> {accountName}</p>
+  </div>
+</div>
+
+<style>
+  .qr-payment {
+    text-align: center;
+    padding: 20px;
+    background: #f0fdf4;
+    border: 2px solid #86efac;
+    border-radius: 12px;
+  }
+
+  .qr-payment__title {
+    margin: 0 0 14px;
+    font-size: 1rem;
+    color: #14532d;
+  }
+
+  .qr-payment__img {
+    width: 160px;
+    height: 160px;
+    object-fit: contain;
+    border-radius: 8px;
+    border: 1px solid #86efac;
+    background: #fff;
+  }
+
+  .qr-payment__info {
+    margin-top: 12px;
+    font-size: .85rem;
+    color: #166534;
+    line-height: 1.7;
+  }
+
+  .qr-payment__info p {
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,107 @@
+---
+interface Props {
+  embedSrc?: string;
+  address?: string;
+}
+
+const {
+  embedSrc = '',
+  address = '123 Đường ABC, Phường XYZ, Quận 1, TP.HCM',
+} = Astro.props;
+---
+
+<div class="map-section">
+  <h2 class="map-section__title">Địa chỉ quán</h2>
+  <p class="map-section__address">📍 {address}</p>
+
+  {embedSrc ? (
+    <div class="map-section__frame-wrap">
+      <iframe
+        src={embedSrc}
+        width="100%"
+        height="100%"
+        style="border:0;"
+        allowfullscreen
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+  ) : (
+    <div class="map-section__placeholder">
+      <span class="map-section__placeholder-icon">🗺️</span>
+      <p>Chưa có bản đồ.</p>
+      <p class="map-section__hint">
+        Vào <strong>Google Maps</strong> → tìm địa chỉ quán → Chia sẻ → Nhúng bản đồ
+        → copy link <code>src="..."</code> và truyền vào prop <code>embedSrc</code>.
+      </p>
+    </div>
+  )}
+</div>
+
+<style>
+  .map-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .map-section__title {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #ea580c;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #ea580c;
+  }
+
+  .map-section__address {
+    margin: 0;
+    font-size: .9rem;
+    color: #555;
+  }
+
+  .map-section__frame-wrap {
+    width: 100%;
+    height: 320px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+  }
+
+  .map-section__placeholder {
+    height: 220px;
+    border-radius: 12px;
+    border: 2px dashed #d1d5db;
+    background: #f9fafb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-align: center;
+    padding: 20px;
+    color: #6b7280;
+    font-size: .85rem;
+  }
+
+  .map-section__placeholder-icon {
+    font-size: 2.5rem;
+  }
+
+  .map-section__placeholder p {
+    margin: 0;
+  }
+
+  .map-section__hint {
+    color: #9ca3af;
+    font-size: .78rem;
+    max-width: 360px;
+    line-height: 1.5;
+  }
+
+  code {
+    background: #f3f4f6;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: .76rem;
+  }
+</style>

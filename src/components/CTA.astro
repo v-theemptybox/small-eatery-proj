@@ -1,0 +1,79 @@
+---
+interface Props {
+  phone?: string;
+  zalo?: string;
+  facebook?: string;
+}
+const {
+  phone = '0909 123 456',
+  zalo = '0909123456',
+  facebook = 'https://facebook.com/quanangiadinh',
+} = Astro.props;
+---
+
+<div class="cta" id="lien-he">
+  <p class="cta__text">Đặt bàn hoặc đặt mang về — liên hệ ngay!</p>
+  <div class="cta__actions">
+    <a href={`tel:${phone.replace(/\s/g, '')}`} class="cta__btn cta__btn--phone">
+      📞 {phone}
+    </a>
+    <a href={`https://zalo.me/${zalo}`} target="_blank" rel="noopener" class="cta__btn cta__btn--zalo">
+      Zalo
+    </a>
+    <a href={facebook} target="_blank" rel="noopener" class="cta__btn cta__btn--fb">
+      Facebook
+    </a>
+  </div>
+</div>
+
+<style>
+  .cta {
+    background: #fff7ed;
+    border: 2px solid #fdba74;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .cta__text {
+    margin: 0 0 14px;
+    font-size: .95rem;
+    color: #7c2d12;
+  }
+
+  .cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .cta__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-size: .9rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: filter .15s;
+  }
+
+  .cta__btn:hover { filter: brightness(.9); }
+
+  .cta__btn--phone {
+    background: #ea580c;
+    color: #fff;
+  }
+
+  .cta__btn--zalo {
+    background: #0068ff;
+    color: #fff;
+  }
+
+  .cta__btn--fb {
+    background: #1877f2;
+    color: #fff;
+  }
+</style>

@@ -1,0 +1,224 @@
+---
+import { reviews } from '../data/reviews';
+
+const avgRating = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
+---
+
+<div class="reviews">
+  <div class="reviews__header">
+    <h2 class="reviews__title">Khách hàng nói gì?</h2>
+    <div class="reviews__summary">
+      <span class="reviews__avg">{avgRating}</span>
+      <span class="reviews__stars" aria-label={`${avgRating} sao`}>
+        {'★'.repeat(5)}
+      </span>
+      <span class="reviews__count">({reviews.length} đánh giá)</span>
+    </div>
+  </div>
+
+  <div class="reviews__carousel-wrap">
+    <button class="reviews__btn reviews__btn--prev" aria-label="Trước" id="rev-prev">&#8249;</button>
+
+    <div class="reviews__track" id="rev-track">
+      {reviews.map(r => (
+        <article class="review-card">
+          <div class="review-card__top">
+            <div class="review-card__avatar" aria-hidden="true">{r.avatar}</div>
+            <div>
+              <p class="review-card__name">{r.name}</p>
+              <p class="review-card__date">{new Date(r.date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</p>
+            </div>
+          </div>
+          <div class="review-card__stars" aria-label={`${r.rating} sao`}>
+            {Array.from({ length: 5 }, (_, i) => (
+              <span class={i < r.rating ? 'star star--on' : 'star'}>★</span>
+            ))}
+          </div>
+          <p class="review-card__content">{r.content}</p>
+        </article>
+      ))}
+    </div>
+
+    <button class="reviews__btn reviews__btn--next" aria-label="Tiếp" id="rev-next">&#8250;</button>
+  </div>
+</div>
+
+<script>
+  const track = document.getElementById('rev-track') as HTMLElement;
+  const btnPrev = document.getElementById('rev-prev') as HTMLButtonElement;
+  const btnNext = document.getElementById('rev-next') as HTMLButtonElement;
+
+  function scrollBy(dir: number) {
+    const card = track.querySelector('.review-card') as HTMLElement;
+    if (!card) return;
+    const gap = 16;
+    track.scrollBy({ left: dir * (card.offsetWidth + gap), behavior: 'smooth' });
+  }
+
+  btnPrev.addEventListener('click', () => scrollBy(-1));
+  btnNext.addEventListener('click', () => scrollBy(1));
+
+  function updateButtons() {
+    btnPrev.disabled = track.scrollLeft <= 0;
+    btnNext.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
+  }
+
+  track.addEventListener('scroll', updateButtons, { passive: true });
+  updateButtons();
+</script>
+
+<style>
+  .reviews {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .reviews__header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #ea580c;
+  }
+
+  .reviews__title {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #ea580c;
+    flex: 1;
+  }
+
+  .reviews__summary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .reviews__avg {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  .reviews__stars {
+    color: #f59e0b;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+  }
+
+  .reviews__count {
+    font-size: .82rem;
+    color: #888;
+  }
+
+  .reviews__carousel-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .reviews__track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    flex: 1;
+    padding: 4px 2px 8px;
+  }
+
+  .reviews__track::-webkit-scrollbar { display: none; }
+
+  .reviews__btn {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #555;
+    transition: background .15s, color .15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .reviews__btn:hover:not(:disabled) {
+    background: #ea580c;
+    color: #fff;
+    border-color: #ea580c;
+  }
+
+  .reviews__btn:disabled {
+    opacity: .3;
+    cursor: default;
+  }
+
+  /* card */
+  .review-card {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    width: 260px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.07);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .review-card__top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .review-card__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fdba74;
+    color: #7c2d12;
+    font-size: .8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .review-card__name {
+    margin: 0;
+    font-size: .9rem;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  .review-card__date {
+    margin: 0;
+    font-size: .75rem;
+    color: #aaa;
+  }
+
+  .review-card__stars {
+    display: flex;
+    gap: 2px;
+  }
+
+  .star { color: #d1d5db; font-size: 1rem; }
+  .star--on { color: #f59e0b; }
+
+  .review-card__content {
+    margin: 0;
+    font-size: .83rem;
+    color: #444;
+    line-height: 1.55;
+  }
+</style>

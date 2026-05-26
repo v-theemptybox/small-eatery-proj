@@ -1,0 +1,210 @@
+---
+import { menu } from '../data/menu';
+import MenuItem from '../components/MenuItem.astro';
+import CTA from '../components/CTA.astro';
+import QRPayment from '../components/QRPayment.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import Reviews from '../components/Reviews.astro';
+import StickyNav from '../components/StickyNav.astro';
+import OpeningHours from '../components/OpeningHours.astro';
+---
+
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quán Ăn Gia Đình</title>
+    <meta name="description" content="Thực đơn quán ăn gia đình — món ngon, giá bình dân." />
+  </head>
+  <body>
+    <header class="site-header">
+      <h1>🍜 Quán Ăn Gia Đình</h1>
+      <p>Món ngon — Giá bình dân — Phục vụ tận tình</p>
+    </header>
+
+    <StickyNav />
+
+    <div class="free-ship-banner" role="banner">
+      🛵 <strong>FREE SHIP</strong> cho đơn từ <strong>100.000đ</strong> trong bán kính 3km
+    </div>
+
+    <main class="container">
+      <CTA
+        phone="0909 123 456"
+        zalo="0909123456"
+        facebook="https://facebook.com/quanangiadinh"
+      />
+
+      {menu.map(category => (
+        <section class="category" id={category.slug}>
+          <h2 class="category__title">{category.name}</h2>
+          <div class="item-grid">
+            {category.items.map(item => (
+              <MenuItem item={item} />
+            ))}
+          </div>
+        </section>
+      ))}
+
+      <div id="reviews">
+        <Reviews />
+      </div>
+
+      <OpeningHours />
+
+      <div id="map">
+        <MapEmbed address="123 Đường ABC, Phường XYZ, Quận 1, TP.HCM" />
+      </div>
+
+      <QRPayment
+        bankName="Vietcombank"
+        accountNumber="1234567890"
+        accountName="NGUYEN VAN A"
+      />
+    </main>
+
+    <footer class="site-footer">
+      <p>© 2025 Quán Ăn Gia Đình · 123 Đường ABC, Q.1, TP.HCM</p>
+      <p class="site-footer__social">
+        <a href="https://facebook.com/quanangiadinh" target="_blank" rel="noopener">Facebook</a>
+        ·
+        <a href="https://zalo.me/0909123456" target="_blank" rel="noopener">Zalo</a>
+      </p>
+    </footer>
+
+    <button class="back-to-top" id="back-to-top" aria-label="Lên đầu trang">↑</button>
+  </body>
+</html>
+
+<script>
+  // smooth scroll cho anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = (a as HTMLAnchorElement).getAttribute('href')!.slice(1);
+      const target = document.getElementById(id);
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // back to top
+  const btn = document.getElementById('back-to-top')!;
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('is-visible', window.scrollY > 300);
+  }, { passive: true });
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+</script>
+
+<style is:global>
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #fafaf8;
+    color: #1a1a1a;
+  }
+
+  .site-header {
+    background: #ea580c;
+    color: #fff;
+    text-align: center;
+    padding: 28px 16px 20px;
+  }
+
+  .site-header h1 {
+    margin: 0 0 6px;
+    font-size: 1.8rem;
+  }
+
+  .site-header p {
+    margin: 0;
+    font-size: .9rem;
+    opacity: .9;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  section[id], div[id] {
+    scroll-margin-top: 52px;
+  }
+
+  .category__title {
+    font-size: 1.3rem;
+    margin: 0 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #ea580c;
+    color: #ea580c;
+  }
+
+  .item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .site-footer {
+    text-align: center;
+    padding: 20px;
+    font-size: .82rem;
+    color: #888;
+    border-top: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .site-footer p { margin: 0; }
+
+  .site-footer__social a {
+    color: #ea580c;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .site-footer__social a:hover { text-decoration: underline; }
+
+  .back-to-top {
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: #ea580c;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0,0,0,.2);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s, transform .25s;
+    transform: translateY(8px);
+  }
+
+  .back-to-top.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .back-to-top:hover { background: #c2410c; }
+
+  .free-ship-banner {
+    background: #16a34a;
+    color: #fff;
+    text-align: center;
+    padding: 9px 16px;
+    font-size: .88rem;
+  }
+</style>
